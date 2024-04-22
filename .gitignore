@@ -1,0 +1,8 @@
+.idea/
+__pycache__/
+Lib/
+Scripts/
+.DS_Store
+pytest.ini
+pyvenv.cfg
+README.md
