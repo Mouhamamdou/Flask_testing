@@ -153,7 +153,7 @@ def purchase_places():
         return render_template('welcome.html', club=club, competitions=competitions, clubs=clubs)
 
     if int(club.points) < required_places:
-        flash('Club does not have enough points')
+        flash('Club does not have enough points.')
         return render_template('welcome.html', club=club, competitions=competitions, clubs=clubs)
 
     if int(competition.nb_of_places) < required_places:
