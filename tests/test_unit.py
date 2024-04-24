@@ -17,7 +17,7 @@ def init_club_manager(monkeypatch):
 @pytest.fixture
 def init_competition_manager(monkeypatch):
     def mock_load_competitions(self):
-        return [Competition('Test Competition', '2024-01-01 00:00:00', '5')]
+        return [Competition('Test Competition', '2024-01-01', '5')]
     monkeypatch.setattr(CompetitionManager, 'loadCompetitions', mock_load_competitions)
 
 
@@ -32,5 +32,5 @@ def test_competition_loading(client, init_competition_manager):
     competition_manager = CompetitionManager()
     competitions = competition_manager.loadCompetitions()
     assert competitions[0].name == 'Test Competition'
-    assert competitions[0].date == '2024-01-01 00:00:00'
+    assert competitions[0].date == '2024-01-01'
     assert competitions[0].nb_of_places == '5'
