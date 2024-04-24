@@ -161,6 +161,7 @@ def purchase_places():
         return render_template('welcome.html', club=club, competitions=competitions, clubs=clubs)
 
     competition.nb_of_places = int(competition.nb_of_places)-required_places
+    
     club.points = str(int(club.points) - required_places)
 
     club_manager.update_club_points(club.name, club.points)
