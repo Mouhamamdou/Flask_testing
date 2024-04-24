@@ -112,7 +112,7 @@ def show_summary():
     competitions = competition_manager.loadCompetitions()
     club = find_club_by_email(request.form['email'])
     if not club:
-        flash("Email not found")
+        flash("Email not found ")
         return redirect(url_for('index'))
     return render_template('welcome.html',club=club,competitions=competitions,clubs=clubs)
 
