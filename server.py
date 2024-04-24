@@ -130,7 +130,7 @@ def book(competition_name,club_name):
     if datetime.strptime(competition.date, "%Y-%m-%d %H:%M:%S") > datetime.now():
         return render_template('booking.html',club=club,competition=competition)
     else:
-        flash("Cannot book places in past competitions")
+        flash("Cannot book places in past competitions.")
         return render_template('welcome.html', club=club, competitions=competitions, clubs=clubs)
 
 
