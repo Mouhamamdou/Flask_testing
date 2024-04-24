@@ -181,6 +181,7 @@ def clubs():
     clubs = club_manager.loadClubs()
     return render_template('clubs.html', clubs=clubs)
 
+
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
