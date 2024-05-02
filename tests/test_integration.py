@@ -39,17 +39,27 @@ def test_past_competition(client, monkeypatch):
 
     response = client.get('/book/Past Competition/Test Club')
 
-    assert response.status_code == 200
+    assert response.status_code == 403
     assert 'Cannot book places in past competitions' in response.data.decode()
+
 
 @pytest.fixture
 def mock_data(monkeypatch):
     def mock_load_clubs(self):
         return [Club('Test Club', 'test@club.com', '10')]
     def mock_load_competitions(self):
-        return [Competition('Test Competition', '2024-06-01 00:00:00', '50')]
+        return [
+            Competition('Test Competition', '2024-06-01 00:00:00', '50'),
+            Competition('Limited Competition', '2024-06-02 00:00:00', '5')
+        ]
+    def mock_save_clubs(self):
+        print("Mock saveClubs.")
+    def mock_save_competitions(self):
+        print("Mock saveCompetitions.")
     monkeypatch.setattr(ClubManager, 'loadClubs', mock_load_clubs)
     monkeypatch.setattr(CompetitionManager, 'loadCompetitions', mock_load_competitions)
+    monkeypatch.setattr(ClubManager, "saveClubs", mock_save_clubs)
+    monkeypatch.setattr(CompetitionManager, "saveCompetitions", mock_save_competitions)
 
 def test_purchase_places(client, mock_data):
     response = client.post('/purchasePlaces', data={
@@ -68,7 +78,7 @@ def test_not_enough_points(client, mock_data):
         'places': '11'
     }, follow_redirects=True)
 
-    assert response.status_code == 200
+    assert response.status_code == 400
     assert 'Club does not have enough points' in response.data.decode()
 
 def test_book_many_places(client, mock_data):
@@ -78,5 +88,16 @@ def test_book_many_places(client, mock_data):
         'places': '15'
     }, follow_redirects=True)
 
-    assert response.status_code == 200
+    assert response.status_code == 400
     assert 'Cannot book more than 12 places' in response.data.decode()
+
+
+def test_not_enough_places(client, mock_data):
+    response = client.post('/purchasePlaces', data={
+        'club': 'Test Club',
+        'competition': 'Limited Competition',
+        'places': '7'
+    }, follow_redirects=True)
+
+    assert response.status_code == 400
+    assert 'Not enough places available for this competition' in response.data.decode()
